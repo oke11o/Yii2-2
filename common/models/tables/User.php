@@ -1,5 +1,5 @@
 <?php
-namespace common\models;
+namespace common\models\tables;
 
 use Yii;
 use yii\base\NotSupportedException;
@@ -26,7 +26,6 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
-
     /**
      * {@inheritdoc}
      */
@@ -41,7 +40,9 @@ class User extends ActiveRecord implements IdentityInterface
     public function behaviors()
     {
         return [
-            TimestampBehavior::className(),
+            [
+                'class' => TimestampBehavior::class
+            ],
         ];
     }
 

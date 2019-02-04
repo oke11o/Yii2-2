@@ -9,15 +9,21 @@ $params = array_merge(
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => [
+        'log',
+        'startApp'
+    ],
     'controllerNamespace' => 'frontend\controllers',
+    'aliases' => [
+        '@img' => '@frontend/web/img'
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
             'cookieValidationKey' => $params['cookieValidationKey']
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\models\tables\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-infosite', 'httpOnly' => true, 'domain' => $params['cookieDomain']],
         ],
@@ -41,14 +47,25 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'task/item/<id:\d+>' => 'task/item',
             ],
         ],
-        */
+        'lang' => [
+            'class' => 'common\models\tables\Language'
+        ],
+        'i18n' => [
+            'translations' => [
+                'task*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@frontend/messages'
+                ]
+            ]
+        ]
     ],
     'params' => $params,
+    'language' => 'ru'
 ];

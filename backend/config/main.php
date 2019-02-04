@@ -10,7 +10,9 @@ return [
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
-    'bootstrap' => ['log'],
+    'bootstrap' => [
+        'log',
+        'startApp'],
     'modules' => [],
     'components' => [
         'request' => [
@@ -18,7 +20,7 @@ return [
             'cookieValidationKey' => $params['cookieValidationKey']
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\models\tables\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-infosite', 'httpOnly' => true, 'domain' => $params['cookieDomain']],
         ],
@@ -42,14 +44,24 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
+        'view' => [
+            'theme' => [
+                'pathMap' => [
+                   '@app/views' => '@vendor/dmstr/yii2-adminlte-asset/example-views/yiisoft/yii2-advanced-app'
+                ],
+            ],
+       ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'tasks/view/<id:\d+>' => 'tasks/view',
+                'users/view/<id:\d+>' => 'users/view',
             ],
         ],
-        */
+        'lang' => [
+            'class' => 'common\models\tables\Language'
+        ],
     ],
     'params' => $params,
 ];
