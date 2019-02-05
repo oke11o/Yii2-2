@@ -31,7 +31,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'username',
-            'email'
+            'email',
+            'language_id',
+            [
+                'label' => 'User Language',
+                'value' => $model->language->name
+            ],
         ],
     ]) ?>
 

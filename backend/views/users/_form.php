@@ -14,7 +14,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'email')->input('email'); ?> 
+    <?= $form->field($model, 'email')->input('email'); ?>
+
+     <?= $form->field($model, 'language_id')->dropDownList($languagesList) ?> 
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

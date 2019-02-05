@@ -28,7 +28,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'username',
             'email',
-            
+            'language_id',
+            [
+                'label' => 'User Language',
+                'value' => 'language.name'
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

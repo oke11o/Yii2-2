@@ -10,6 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
+use common\models\SignupForm;
+use common\models\tables\Language;
 
 /**
  * AdminUsersController implements the CRUD actions for Users model.
@@ -75,14 +77,30 @@ class UsersController extends Controller
      */
     public function actionCreate()
     {
-        $model = new User();
+        /*$model = new User();
+        $languages = Language::find()->all();
+        $languagesList = ArrayHelper::map($languages, 'id', 'name');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
-            'model' => $model
+            'model' => $model,
+            'languagesList' => $languagesList
+        ]);*/
+
+        $model = new SignupForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($user = $model->signup()) {
+                if (Yii::$app->getUser()->login($user)) {
+                    return $this->goHome();
+                }
+            }
+        }
+
+        return $this->render('signup', [
+            'model' => $model,
         ]);
     }
 
@@ -96,13 +114,16 @@ class UsersController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $languages = Language::find()->all();
+        $languagesList = ArrayHelper::map($languages, 'id', 'name');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
-            'model' => $model
+            'model' => $model,
+            'languagesList' => $languagesList
         ]);
     }
 

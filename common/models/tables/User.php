@@ -54,6 +54,8 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            ['language_id', 'integer'],
+            ['username', 'string', 'max' => 255]
         ];
     }
 
@@ -186,5 +188,9 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    public function getLanguage() {
+        return $this->hasOne(Language::class, ['id' => 'language_id']);
     }
 }
