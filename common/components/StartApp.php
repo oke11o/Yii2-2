@@ -11,7 +11,7 @@ class StartApp extends Component {
 
     public function init() {
         $this->attachEvantHandlers();
-        Yii::$app->lang->setLanguageApp();
+        //Yii::$app->lang->setLanguageApp();
     }
 
     private function attachEvantHandlers() {
