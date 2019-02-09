@@ -5,7 +5,6 @@ namespace frontend\controllers;
 use Yii;
 use yii\web\Controller as Controller;
 use yii\data\ActiveDataProvider;
-//use app\models\Task as Task;
 use common\models\tables\Tasks;
 use common\models\tables\User;
 use common\models\tables\Status;
@@ -15,6 +14,7 @@ use common\models\tables\Comments;
 use yii\web\UploadedFile;
 use common\models\tables\TaskComment;
 use frontend\services\TaskLabel;
+use common\models\tables\Chat;
 
 class TaskController extends Controller {
 
@@ -88,13 +88,23 @@ class TaskController extends Controller {
         ]);
 
         $labelPage = $this->createLabelPageOneItem();
+        $chatMessage = new Chat([
+            'user_id' => $user_id,
+            'task_id' => $id
+        ]);
+
+        $chatList = Chat::find()
+            ->where(['task_id' => $id])
+            ->all();
 
         return $this->render('item', [
             'model' => $model,
             'user_id' => $user_id,
             'modelComment' => new Comments(),
             'dataProvider' => $dataProvider,
-            'labelPage' => $labelPage
+            'labelPage' => $labelPage,
+            'chatMessage' => $chatMessage,
+            'chatList' => $chatList
         ]);
     }
 

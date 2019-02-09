@@ -52,6 +52,7 @@ return [
             'showScriptName' => false,
             'rules' => [
                 'task/item/<id:\d+>' => 'task/item',
+                'task/chatItem/<id:\d+>' => 'task/chatItem',
             ],
         ],
         'lang' => [

@@ -8,3 +8,11 @@
     margin: 10px;
     border: 1px solid black;
 }
+
+textarea {
+    width: 100%;
+}
+
+.invisible_block {
+    display: none;
+}

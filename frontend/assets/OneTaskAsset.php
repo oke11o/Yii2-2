@@ -12,5 +12,11 @@ class OneTaskAsset extends AssetBundle
         '/css/one_task.css',
     ];
     public $js = [
+        '/js/client.js'
+    ];
+    public $depens = [
+        JqueryAsset::class,
+        'yii\bootstrap\BootstrapPluginAsset',
+        'yii\web\YiiAsset'
     ];
 }

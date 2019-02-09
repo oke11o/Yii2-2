@@ -5,9 +5,11 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\widgets\ListView;
 use frontend\assets\OneTaskAsset;
+use yii\widgets\Pjax;
 
 OneTaskAsset::register($this);
 ?>
+<p class="invisible_block" id="taskId"><?= $model->id; ?></p>
 
 <h2><?=$labelPage->nameLabel ?><?= $model->name ?></h2>
 <p><?= $labelPage->descriptionLabel ?><?= $model->description ?></p>
@@ -52,3 +54,40 @@ OneTaskAsset::register($this);
         ]
     ]);
 ?>
+
+<h4>Чат:</h4>
+<?php if($user_id): ?>
+    <?php $form1 = ActiveForm::begin([
+        'id' => 'chat_form',
+        //'action' => '#'//Url::to(['task/chat', 'id' => $chatMessage->task_id]),
+        //'method' => 'post'
+    ]); ?>
+
+        <?= $form1->field($chatMessage, 'msg')->textArea() ?>
+
+        <?= $form1->field($chatMessage, 'task_id', ['options' => ['id'=>'chat_task']])->hiddenInput()->label(false) ?>
+
+        <?= $form1->field($chatMessage, 'user_id', ['options' => ['id'=>'chat_user']])->hiddenInput()->label(false) ?>
+
+        <?= Html::hiddeninput('username', $chatMessage->user->username, ['id' => 'chat_username']) ?>
+
+        <?= Html::submitButton('Отправить сообщение', [
+            'class' => 'btn btn-success',
+            'id' => 'chat_form_btn'
+            ]) ?>
+
+    <?php ActiveForm::end(); ?>
+<?php else: ?>
+    <h5>Для того, чтобы оправить сообщение в чат, необходимо авторизоваться.</h5>
+<?php endif; ?>
+    <hr>
+    <h5>История сообщенией:</h5>
+    <div id="root_chat">
+        <?php foreach($chatList as $message): ?>
+            <p>
+                <?= $message->user->username ?>:<br>
+                <?= $message->msg ?><br>
+            </p>
+        <?php endforeach; ?>
+    </div>
+<?php //Pjax::end(); ?>
