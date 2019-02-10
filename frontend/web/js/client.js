@@ -3,7 +3,7 @@ if (!window.WebSocket) {
 }
 
 var taskId = document.getElementById("taskId").innerHTML;
-var addrSite = "ws://test:8080/";
+var addrSite = "ws://task.local:8080/";
 var webSocket = new WebSocket(addrSite);
 var chatForm = document.getElementById("chat_form_btn");
 if (chatForm) {
