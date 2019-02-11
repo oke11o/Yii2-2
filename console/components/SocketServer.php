@@ -6,41 +6,49 @@ use Ratchet\MessageComponentInterface;
 use common\models\tables\Chat;
 
 class SocketServer implements MessageComponentInterface {
-    protected $clients;
+    protected $clients = [];
 
     public function __construct() {
-        $this->clients = new \SplObjectStorage();
         echo "Server started\n";
     }
 
+    private function getChannel($conn){
+        $queryString = $conn->httpRequest->getUri()->getQuery();
+        return explode("=", $queryString)[1];
+    }
+
     function onOpen(ConnectionInterface $conn) {
-        $this->clients->attach($conn);
+        $channel = $this->getChannel($conn);
+        $this->clients[$channel][$conn->resourceId] = $conn;
         echo "New connection: {$conn->resourceId}\n";
     }
 
     function onClose(ConnectionInterface $conn) {
-        $this->clients->detach($conn);
+        $channel = $this->getChannel($conn);
+        unset($this->clients[$channel][$conn->resourceId]);
         echo "user {$conn->resourceId} disconnect\n";
     }
 
     function onError(ConnectionInterface $conn, \Exception $e) {
         echo "\nconnection {$conn->resourceId} close with error\n";
         $conn->close();
-        $this->clients->detach($conn);
+        $channel = $this->getChannel($conn);
+        unset($this->clients[$channel][$conn->resourceId]);
     }
 
     function onMessage(ConnectionInterface $from, $msg) {
         echo "{$from->resourceId}: {$msg}\n";
-        foreach($this->clients as $client) {
-            $client->send($msg);
-        }
 
         $msgChat = json_decode($msg);
-        $chatMessage = new Chat([
-            'task_id' => $msgChat->task_id,
+        (new Chat([
+            'channel' => $msgChat->channel,
             'user_id' => $msgChat->user_id,
             'msg' => $msgChat->message
-        ]);
-        $chatMessage->save();
+        ]))->save();
+
+        $channel = $msgChat->channel;
+        foreach($this->clients[$channel] as $client) {
+            $client->send($msg);
+        }
     }
 }

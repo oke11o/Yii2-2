@@ -90,11 +90,11 @@ class TaskController extends Controller {
         $labelPage = $this->createLabelPageOneItem();
         $chatMessage = new Chat([
             'user_id' => $user_id,
-            'task_id' => $id
+            'channel' => 'Task_' . $id
         ]);
 
         $chatList = Chat::find()
-            ->where(['task_id' => $id])
+            ->where(['channel' => 'Task_' . $id])
             ->all();
 
         return $this->render('item', [

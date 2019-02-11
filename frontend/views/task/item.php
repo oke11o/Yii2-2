@@ -57,15 +57,11 @@ OneTaskAsset::register($this);
 
 <h4>Чат:</h4>
 <?php if($user_id): ?>
-    <?php $form1 = ActiveForm::begin([
-        'id' => 'chat_form',
-        //'action' => '#'//Url::to(['task/chat', 'id' => $chatMessage->task_id]),
-        //'method' => 'post'
-    ]); ?>
+    <?php $form1 = ActiveForm::begin(['id' => 'chat_form']); ?>
 
         <?= $form1->field($chatMessage, 'msg')->textArea() ?>
 
-        <?= $form1->field($chatMessage, 'task_id', ['options' => ['id'=>'chat_task']])->hiddenInput()->label(false) ?>
+        <?= $form1->field($chatMessage, 'channel', ['options' => ['id'=>'chat_task']])->hiddenInput()->label(false) ?>
 
         <?= $form1->field($chatMessage, 'user_id', ['options' => ['id'=>'chat_user']])->hiddenInput()->label(false) ?>
 
@@ -91,3 +87,6 @@ OneTaskAsset::register($this);
         <?php endforeach; ?>
     </div>
 <?php //Pjax::end(); ?>
+<script>
+    channel = '<?= $chatMessage->channel ?>'
+</script>

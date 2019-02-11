@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "chat".
  *
  * @property int $id
- * @property int $task_id
+ * @property string $channel
  * @property int $user_id
  * @property string $msg
  *
@@ -31,10 +31,9 @@ class Chat extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['task_id', 'user_id', 'msg'], 'required'],
-            [['task_id', 'user_id'], 'integer'],
-            [['msg'], 'string'],
-            [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tasks::className(), 'targetAttribute' => ['task_id' => 'id']],
+            [['channel', 'user_id', 'msg'], 'required'],
+            [['user_id'], 'integer'],
+            [['msg', 'channel'], 'string'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -46,18 +45,10 @@ class Chat extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'task_id' => 'Task ID',
+            'channel' => 'Channel',
             'user_id' => 'User ID',
             'msg' => 'Введите сообщение:',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTask()
-    {
-        return $this->hasOne(Tasks::className(), ['id' => 'task_id']);
     }
 
     /**
