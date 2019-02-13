@@ -4,12 +4,12 @@ namespace backend\models\filters;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\tables\Tasks;
+use common\models\tables\Project;
 
 /**
- * TasksSearch represents the model behind the search form of `app\models\tables\Tasks`.
+ * ProjectSearch represents the model behind the search form of `common\models\tables\Project`.
  */
-class TasksSearch extends Tasks
+class ProjectSearch extends Project
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class TasksSearch extends Tasks
     public function rules()
     {
         return [
-            [['id', 'responsible_id'], 'integer'],
-            [['name', 'date', 'description'], 'safe'],
+            [['id', 'status_id'], 'integer'],
+            [['name', 'description', 'status'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class TasksSearch extends Tasks
      */
     public function search($params)
     {
-        $query = Tasks::find();
+        $query = Project::find();
 
         // add conditions that should always apply here
 
@@ -59,8 +59,7 @@ class TasksSearch extends Tasks
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'date' => $this->date,
-            'responsible_id' => $this->responsible_id,
+            'status_id' => $this->status_id,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

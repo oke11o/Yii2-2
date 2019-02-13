@@ -1,0 +1,15 @@
+.one_preview_projects {
+    display:flex; 
+    justify-content:space-around;
+}
+
+.projects-item {
+    width: 300px;
+    margin-bottom: 20px;
+}
+
+.preview_projects {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}

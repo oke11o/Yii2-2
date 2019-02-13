@@ -2,7 +2,6 @@ if (!window.WebSocket) {
     alert("Ваш браузер не поддерживает веб-соккеты!");
 }
 
-var taskId = document.getElementById("taskId").innerHTML;
 var addrSite = "ws://task.local:8080?channel=" + channel;
 var webSocket = new WebSocket(addrSite);
 var chatForm = document.getElementById("chat_form_btn");
@@ -23,9 +22,7 @@ if (chatForm) {
 
 webSocket.onmessage = function(event) {
     var data = JSON.parse(event.data);
-    //if (data.task_id == taskId) {
-        var messageContainer = document.createElement('p');
-        messageContainer.innerHTML = data.user + "<br>" + data.message + "<br>";
-        document.getElementById("root_chat").appendChild(messageContainer);
-    //}
+    var messageContainer = document.createElement('p');
+    messageContainer.innerHTML = data.user + "<br>" + data.message + "<br>";
+    document.getElementById("root_chat").appendChild(messageContainer);
 }

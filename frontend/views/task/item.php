@@ -6,24 +6,57 @@ use yii\widgets\ActiveForm;
 use yii\widgets\ListView;
 use frontend\assets\OneTaskAsset;
 use yii\widgets\Pjax;
+use kartik\datetime\DateTimePicker;
 
 OneTaskAsset::register($this);
 ?>
-<p class="invisible_block" id="taskId"><?= $model->id; ?></p>
 
-<h2><?=$labelPage->nameLabel ?><?= $model->name ?></h2>
-<p><?= $labelPage->descriptionLabel ?><?= $model->description ?></p>
-<div><?= $labelPage->dateLabel ?><?= $model->date ?></div>
-<div><?= $labelPage->responsibleLabel ?><?= $model->user->username ?></div>
-<div><?= $labelPage->statusLabel ?><?= $model->status->name ?></div>
+<h2><?= $labelPage->labelChange ?></h2>
 
-<?= Html::beginForm(['task/update', 'id' => $model->id]) ?>
-    <?= Html::submitButton($labelPage->buttonChange, ['class' => 'btn btn-warning create_task_button']) ?>
-<?= Html::endForm() ?>
+<div class="tasks-form">
+<?php Pjax::begin(['enablePushState' => false]); ?>
+    <?php $form = ActiveForm::begin([
+        'method' => 'post',
+        'action' => Url::to(['task/update', 'id' => $model->id]),
+        'options' => ['data-pjax' => true ]]
+    ); ?>
 
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'date')->widget(DateTimePicker::className(),[
+        'name' => 'dp_1',
+        'type' => DateTimePicker::TYPE_INPUT,
+        'options' => ['placeholder' => 'Ввод даты/времени...'],
+        'convertFormat' => true,
+        'value'=> date("d.m.Y h:i",(integer) $model->date),
+        'pluginOptions' => [
+            'format' => 'yyyy-MM-dd HH:mm:ss',
+            'autoclose'=>true,
+            'weekStart'=>1,
+            'startDate' => '2015-05-01 00:00:00',
+            'todayBtn'=>true,
+        ]
+    ]) ?>
+
+    <?= $form->field($model, 'description')->textArea() ?>
+
+    <?= $form->field($model, 'responsible_id')->dropDownList($usersList) ?>
+
+    <?= $form->field($model, 'id_status')->dropDownList($statusList) ?>
+
+    <?= $form->field($model, 'project_id')->dropDownList($projectList) ?>
+
+    <div class="form-group">
+        <?= Html::submitButton($labelPage->buttonSave, ['class' => 'btn btn-success']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
+<?php Pjax::end(); ?>
+
+<?php Pjax::begin(); ?>
 <?php if($user_id && !\Yii::$app->user->can('CommentAddDenied')): ?>
 <h4><?= $labelPage->addCommentLabel ?></h4>
-<?php $form = ActiveForm::begin(); ?>
+<?php $form = ActiveForm::begin(['options' => ['data-pjax' => true ]]); ?>
 
 <?= $form->field($modelComment, 'title')->textInput(['maxlength' => true]) ?>
 
@@ -54,6 +87,7 @@ OneTaskAsset::register($this);
         ]
     ]);
 ?>
+<?php Pjax::end(); ?>
 
 <h4>Чат:</h4>
 <?php if($user_id): ?>
@@ -86,7 +120,6 @@ OneTaskAsset::register($this);
             </p>
         <?php endforeach; ?>
     </div>
-<?php //Pjax::end(); ?>
 <script>
     channel = '<?= $chatMessage->channel ?>'
 </script>

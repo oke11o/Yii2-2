@@ -3,21 +3,18 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\tables\Tasks;
-use common\models\filters\TasksSearch;
+use common\models\tables\Project;
+use common\models\tables\Status;
+use backend\models\filters\ProjectSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use common\models\tables\User;
-use common\models\tables\Status;
-use common\models\tables\Project;
-use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 
 /**
- * AdminTasksController implements the CRUD actions for Tasks model.
+ * ProjectController implements the CRUD actions for Project model.
  */
-class TasksController extends Controller
+class ProjectController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -31,25 +28,16 @@ class TasksController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['admin'],
-                    ],
-                ],
-            ],
         ];
     }
 
     /**
-     * Lists all Tasks models.
+     * Lists all Project models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new TasksSearch();
+        $searchModel = new ProjectSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -59,7 +47,7 @@ class TasksController extends Controller
     }
 
     /**
-     * Displays a single Tasks model.
+     * Displays a single Project model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -72,37 +60,29 @@ class TasksController extends Controller
     }
 
     /**
-     * Creates a new Tasks model.
+     * Creates a new Project model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Tasks();
-
-        $users = User::find()->all();
-        $usersList = ArrayHelper::map($users, 'id', 'username');
-
-        $status = Status::find()->all();
-        $statusList = ArrayHelper::map($status, 'id', 'name');
-
-        $project = Project::find()->all();
-        $projectList = ArrayHelper::map($project, 'id', 'name');
+        $model = new Project();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $status = Status::find()->all();
+        $statusList = ArrayHelper::map($status, 'id', 'name');
+
         return $this->render('create', [
             'model' => $model,
-            'usersList' => $usersList,
-            'statusList' => $statusList,
-            'projectList' => $projectList
+            'statusList' => $statusList
         ]);
     }
 
     /**
-     * Updates an existing Tasks model.
+     * Updates an existing Project model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -111,8 +91,6 @@ class TasksController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $users = User::find()->all();
-        $usersList = ArrayHelper::map($users, 'id', 'username');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -121,19 +99,14 @@ class TasksController extends Controller
         $status = Status::find()->all();
         $statusList = ArrayHelper::map($status, 'id', 'name');
 
-        $project = Project::find()->all();
-        $projectList = ArrayHelper::map($project, 'id', 'name');
-
         return $this->render('update', [
             'model' => $model,
-            'usersList' => $usersList,
-            'statusList' => $statusList,
-            'projectList' => $projectList
+            'statusList' => $statusList
         ]);
     }
 
     /**
-     * Deletes an existing Tasks model.
+     * Deletes an existing Project model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -147,15 +120,15 @@ class TasksController extends Controller
     }
 
     /**
-     * Finds the Tasks model based on its primary key value.
+     * Finds the Project model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Tasks the loaded model
+     * @return Project the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Tasks::findOne($id)) !== null) {
+        if (($model = Project::findOne($id)) !== null) {
             return $model;
         }
 

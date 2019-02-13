@@ -5,7 +5,6 @@ use yii\widgets\ListView;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use kartik\datetime\DateTimePicker;
-use yii\widgets\Pjax;
 use frontend\assets\TasksAsset;
 
 /* @var $this yii\web\View */
@@ -50,17 +49,15 @@ TasksAsset::register($this);
         <?= Html::submitButton('Показать задачи', ['class' => 'btn btn-success']) ?>
     <?php ActiveForm::end() ?>
 
-    <?php Pjax::begin(); ?>
-        <?= ListView::widget([
-            'dataProvider' => $dataProvider,
-            'itemView' => 'view',
-            'options' => [
-                'class' => 'preview_tasks'
-            ],
-        ]); 
-        
-        ?>
-    <?php Pjax::end(); ?>
+    <?= ListView::widget([
+        'dataProvider' => $dataProvider,
+        'itemView' => 'view',
+        'options' => [
+            'class' => 'preview_tasks'
+        ],
+    ]); 
+    
+    ?>
 
     <?= Html::beginForm(Url::to(['task/create'])) ?>
         <?= Html::submitButton('Создать новую задачу', ['class' => 'btn btn-warning create_task_button']) ?>

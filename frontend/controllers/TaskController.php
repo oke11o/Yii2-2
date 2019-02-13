@@ -15,6 +15,7 @@ use yii\web\UploadedFile;
 use common\models\tables\TaskComment;
 use frontend\services\TaskLabel;
 use common\models\tables\Chat;
+use common\models\tables\Project;
 
 class TaskController extends Controller {
 
@@ -47,18 +48,14 @@ class TaskController extends Controller {
 
     private function createLabelPageOneItem() {
         $labelPage = new TaskLabel();
-        $labelPage->descriptionLabel = Yii::t('taskItem', 'descriptionLabel');
-        $labelPage->nameLabel = Yii::t('taskItem', 'nameLabel');
-        $labelPage->dateLabel = Yii::t('taskItem', 'dateLabel');
-        $labelPage->responsibleLabel = Yii::t('taskItem', 'responsibleLabel');
-        $labelPage->statusLabel = Yii::t('taskItem', 'statusLabel');
-        $labelPage->buttonChange = Yii::t('taskItem', 'buttonChange');
         $labelPage->commentLoginLabel = Yii::t('taskItem', 'commentLoginLabel');
         $labelPage->commentsTaskLabel = Yii::t('taskItem', 'commentsTaskLabel');
         $labelPage->userLabel = Yii::t('taskItem', 'userLabel');
         $labelPage->nameCommentLabel = Yii::t('taskItem', 'nameCommentLabel');
         $labelPage->commentLabel = Yii::t('taskItem', 'commentLabel');
         $labelPage->addCommentLabel = Yii::t('taskItem', 'addCommentLabel');
+        $labelPage->buttonSave = Yii::t('taskItem', 'buttonSave');
+        $labelPage->labelChange = Yii::t('taskItem', 'labelChange');
 
         return $labelPage;
     }
@@ -97,14 +94,26 @@ class TaskController extends Controller {
             ->where(['channel' => 'Task_' . $id])
             ->all();
 
+        $users = User::find()->all();
+        $usersList = ArrayHelper::map($users, 'id', 'username');
+
+        $status = Status::find()->all();
+        $statusList = ArrayHelper::map($status, 'id', 'name');
+
+        $project = Project::find()->all();
+        $projectList = ArrayHelper::map($project, 'id', 'name');
+
         return $this->render('item', [
             'model' => $model,
+            'usersList' => $usersList,
+            'statusList' => $statusList,
             'user_id' => $user_id,
             'modelComment' => new Comments(),
             'dataProvider' => $dataProvider,
             'labelPage' => $labelPage,
             'chatMessage' => $chatMessage,
-            'chatList' => $chatList
+            'chatList' => $chatList,
+            'projectList' => $projectList
         ]);
     }
 
@@ -117,35 +126,28 @@ class TaskController extends Controller {
         $status = Status::find()->all();
         $statusList = ArrayHelper::map($status, 'id', 'name');
 
+        $project = Project::find()->all();
+        $projectList = ArrayHelper::map($project, 'id', 'name');
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['update', 'id' => $model->id]);
+            return $this->redirect(['item', 'id' => $model->id]);
         }
 
         return $this->render('create', [
             'model' => $model,
             'usersList' => $usersList,
-            'statusList' => $statusList
+            'statusList' => $statusList,
+            'projectList' => $projectList
         ]);
     }
 
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        $users = User::find()->all();
-        $usersList = ArrayHelper::map($users, 'id', 'username');
-
-        $status = Status::find()->all();
-        $statusList = ArrayHelper::map($status, 'id', 'name');
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['update', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-            'usersList' => $usersList,
-            'statusList' => $statusList
+        $model->load(Yii::$app->request->post());
+        $model->save();
+        return $this->render('item', [
+            'model' => $model
         ]);
     }
 

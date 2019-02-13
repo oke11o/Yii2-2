@@ -39,7 +39,7 @@ class Tasks extends ActiveRecord
             [['name', 'date'], 'required'],
             [['date', 'updated_at', 'created_at'], 'safe'],
             [['description'], 'string'],
-            [['responsible_id', 'id_status'], 'integer'],
+            [['responsible_id', 'id_status', 'project_id'], 'integer'],
             [['name'], 'string', 'max' => 255],
         ];
     }
@@ -51,13 +51,14 @@ class Tasks extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Название',
-            'date' => 'Срок',
-            'description' => 'Описание',
-            'responsible_id' => 'Ответственный',
+            'name' => Yii::t('taskTask', 'nameLabel'),
+            'date' => Yii::t('taskTask', 'dateLabel'),
+            'description' => Yii::t('taskTask', 'descriptionLabel'),
+            'responsible_id' => Yii::t('taskTask', 'responsibleLabel'),
             'created_at' => 'Created time',
             'update_at' => 'Updated time',
-            'id_status' => 'Статус задачи'
+            'id_status' => Yii::t('taskTask', 'statusLabel'),
+            'project_id' => Yii::t('taskTask', 'projectLabel')
         ];
     }
 
@@ -67,6 +68,10 @@ class Tasks extends ActiveRecord
 
     public function getStatus() {
         return $this->hasOne(Status::class, ['id' => 'id_status']);
+    }
+
+    public function getProject() {
+        return $this->hasOne(Project::class, ['id' => 'project_id']);
     }
 
     public function afterSave($insert, $changedAttributes) {

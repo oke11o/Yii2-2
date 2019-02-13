@@ -53,18 +53,11 @@ return [
             'rules' => [
                 'task/item/<id:\d+>' => 'task/item',
                 'task/chatItem/<id:\d+>' => 'task/chatItem',
+                'project/item/<id:\d+>' => 'project/item',
             ],
         ],
         'lang' => [
             'class' => 'common\models\tables\Language'
-        ],
-        'i18n' => [
-            'translations' => [
-                'task*' => [
-                    'class' => 'yii\i18n\PhpMessageSource',
-                    'basePath' => '@frontend/messages'
-                ]
-            ]
         ]
     ],
     'params' => $params,

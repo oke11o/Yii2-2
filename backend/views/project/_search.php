@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\filters\TasksSearch */
+/* @var $model backend\models\filters\ProjectSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="tasks-search">
+<div class="project-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -19,15 +19,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name') ?>
 
-    <?= $form->field($model, 'date') ?>
+    <?= $form->field($model, 'status_id') ?>
 
     <?= $form->field($model, 'description') ?>
-
-    <?= $form->field($model, 'responsible_id') ?>
-
-    <?= $form->field($model, 'id_status') ?>
-
-    <?= $form->field($model, 'project_id') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

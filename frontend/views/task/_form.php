@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\widgets\Pjax;
 use kartik\datetime\DateTimePicker;
 
 /* @var $this yii\web\View */
@@ -10,7 +11,6 @@ use kartik\datetime\DateTimePicker;
 ?>
 
 <div class="tasks-form">
-
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
@@ -36,8 +36,10 @@ use kartik\datetime\DateTimePicker;
 
     <?= $form->field($model, 'id_status')->dropDownList($statusList) ?>
 
+    <?= $form->field($model, 'project_id')->dropDownList($projectList) ?>
+
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -35,6 +35,10 @@ use kartik\datetime\DateTimePicker;
 
     <?= $form->field($model, 'responsible_id')->dropDownList($usersList) ?>
 
+    <?= $form->field($model, 'id_status')->dropDownList($statusList) ?>
+
+    <?= $form->field($model, 'project_id')->dropDownList($projectList) ?>
+
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
