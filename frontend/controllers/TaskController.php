@@ -46,34 +46,10 @@ class TaskController extends Controller {
         ]);
     }
 
-    private function createLabelPageOneItem() {
-        $labelPage = new TaskLabel();
-        $labelPage->commentLoginLabel = Yii::t('taskItem', 'commentLoginLabel');
-        $labelPage->commentsTaskLabel = Yii::t('taskItem', 'commentsTaskLabel');
-        $labelPage->userLabel = Yii::t('taskItem', 'userLabel');
-        $labelPage->nameCommentLabel = Yii::t('taskItem', 'nameCommentLabel');
-        $labelPage->commentLabel = Yii::t('taskItem', 'commentLabel');
-        $labelPage->addCommentLabel = Yii::t('taskItem', 'addCommentLabel');
-        $labelPage->buttonSave = Yii::t('taskItem', 'buttonSave');
-        $labelPage->labelChange = Yii::t('taskItem', 'labelChange');
-
-        return $labelPage;
-    }
-
     public function actionItem($id) {
         $model = Tasks::findOne($id);
         $user_id = Yii::$app->user->identity->id;
         $modelComment = new Comments();
-
-        if ($modelComment->load(Yii::$app->request->post())){
-            $modelComment->user_id = $user_id;
-            $modelComment->task_id = $id;
-            
-            if ($modelComment->img_path = UploadedFile::getInstance($modelComment, 'img_path')) {
-                $modelComment->upload();
-            }
-            $modelComment->save();
-        }
 
         $query = Comments::find()
             ->where(['task_id' => $id]);
@@ -84,7 +60,7 @@ class TaskController extends Controller {
             ]
         ]);
 
-        $labelPage = $this->createLabelPageOneItem();
+        $labelPage = new TaskLabel();
         $chatMessage = new Chat([
             'user_id' => $user_id,
             'channel' => 'Task_' . $id
@@ -117,6 +93,39 @@ class TaskController extends Controller {
         ]);
     }
 
+    public function actionComment($id) {
+        $user_id = Yii::$app->user->identity->id;
+        $labelPage = new TaskLabel();
+        $modelComment = new Comments();
+
+        if ($modelComment->load(Yii::$app->request->post())){
+            $modelComment->user_id = $user_id;
+            $modelComment->task_id = $id;
+            
+            if ($modelComment->img_path = UploadedFile::getInstance($modelComment, 'img_path')) {
+                $modelComment->upload();
+            }
+            $modelComment->save();
+        }
+
+        $query = Comments::find()
+            ->where(['task_id' => $id]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 6
+            ]
+        ]);
+
+        return $this->renderAjax('_comment', [
+            'user_id' => $user_id,
+            'labelPage' => $labelPage,
+            'modelComment' => $modelComment,
+            'dataProvider' => $dataProvider,
+            'id' => $id
+        ]);
+    }
+
     public function actionCreate() {
         $model = new Tasks();
 
@@ -146,7 +155,7 @@ class TaskController extends Controller {
         $model = $this->findModel($id);
         $model->load(Yii::$app->request->post());
         $model->save();
-        return $this->render('item', [
+        return $this->renderAjax('_one', [
             'model' => $model
         ]);
     }
