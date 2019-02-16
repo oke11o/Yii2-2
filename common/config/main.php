@@ -22,6 +22,10 @@ return [
                     'basePath' => '@common/messages'
                 ]
             ]
+        ],
+        'bot' => [
+            'class' => 'SonkoDmitry\Yii\TelegramBot\Component',
+            'apiToken' => '778789174:AAFxcnE2rYtSQucq5Bnol6loqsg7KQ74APA'
         ]
     ],
 ];

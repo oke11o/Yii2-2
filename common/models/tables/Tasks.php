@@ -37,10 +37,14 @@ class Tasks extends ActiveRecord
     {
         return [
             [['name', 'date'], 'required'],
-            [['date', 'updated_at', 'created_at'], 'safe'],
+            [['date', 'created_at', 'update_at'], 'safe'],
             [['description'], 'string'],
             [['responsible_id', 'id_status', 'project_id'], 'integer'],
             [['name'], 'string', 'max' => 255],
+            [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::className(), 'targetAttribute' => ['project_id' => 'id']],
+            [['responsible_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['responsible_id' => 'id']],
+            [['id_status'], 'exist', 'skipOnError' => true, 'targetClass' => Status::className(), 'targetAttribute' => ['id_status' => 'id']],
+            [['responsible_id', 'project_id'], 'default', 'value' => 1]
         ];
     }
 

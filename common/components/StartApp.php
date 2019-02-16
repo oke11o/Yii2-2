@@ -4,17 +4,17 @@ namespace common\components;
 use Yii;
 use yii\base\Component;
 use yii\base\Event;
-use common\models\tables\Tasks as Tasks;
+use common\models\tables\Tasks;
 
 class StartApp extends Component {
     public $emailApp = 'my@mail.ru';
 
     public function init() {
-        $this->attachEvantHandlers();
+        $this->attachEventHandlers();
         Yii::$app->lang->setLanguageApp();
     }
 
-    private function attachEvantHandlers() {
+    private function attachEventHandlers() {
         $handlerMail = function($event) {
             Yii::$app->mailer->compose()
                 ->setTo($event->task->user->email)
@@ -28,7 +28,6 @@ class StartApp extends Component {
     }
 
     private function shortDescriptionTask($task) {
-        //var_dump(1);
         $description = '';
 
         if ($task->name) {
