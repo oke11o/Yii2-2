@@ -69,34 +69,4 @@ class Project extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Tasks::className(), ['project_id' => 'id']);
     }
-
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-
-        $this->sendInfoUser($insert);
-    }
-
-    private function sendInfoUser($insert) {
-        $listenerProject = TelegramSubscribe::find()
-            ->where(['channel' => TelegramSubscribe::CHANNEL_PROJECT_CREATE])
-            ->all();
-        $listenerProjectList = ArrayHelper::map($listenerProject, 'id', 'chat-id');
-
-        if ($insert) {
-            $response = "Создан проект\n";
-        } else {
-            $response = "Обновлен проект\n";
-        }
-        $response .= "Название проекта: {$this->name}.\n";
-        if ($this->description) {
-            $response .= "Описание проекта: {$this->description}.\n";
-        }
-        $response .= "Статус проекта: {$this->status->name}.\n";
-
-        $bot = \Yii::$app->bot;
-        foreach($listenerProjectList as $listener) {
-            $bot->sendMessage($listener, $response);
-        }
-    }
 }

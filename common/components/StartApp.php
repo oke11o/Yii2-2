@@ -5,6 +5,8 @@ use Yii;
 use yii\base\Component;
 use yii\base\Event;
 use common\models\tables\Tasks;
+use common\models\tables\Project;
+use common\models\tables\TelegramSubscribe;
 
 class StartApp extends Component {
     public $emailApp = 'my@mail.ru';
@@ -12,6 +14,7 @@ class StartApp extends Component {
     public function init() {
         $this->attachEventHandlers();
         Yii::$app->lang->setLanguageApp();
+        $this->attachProjectListenet();
     }
 
     private function attachEventHandlers() {
@@ -48,5 +51,35 @@ class StartApp extends Component {
         }
 
         return $description;
+    }
+
+    private function listenerProject($event, $response) {
+        $listenerProject = TelegramSubscribe::find()
+            ->select('chat-id')
+            ->where(['channel' => TelegramSubscribe::CHANNEL_PROJECT_CREATE])
+            ->column();
+
+        $response .= "Название проекта: {$event->sender->name}.\n";
+        if ($event->sender->description) {
+            $response .= "Описание проекта: {$event->sender->description}.\n";
+        }
+        $response .= "Статус проекта: {$event->sender->status->name}.\n";
+
+        $bot = \Yii::$app->bot;
+        foreach($listenerProject as $listener) {
+            $bot->sendMessage($listener, $response);
+        }
+    }
+
+    private function attachProjectListenet() {
+        Event::on(Project::class, Project::EVENT_BEFORE_INSERT, function(Event $event) {
+            $response = "Создан проект\n";
+            $this->listenerProject($event, $response);
+        });
+
+        Event::on(Project::class, Project::EVENT_BEFORE_UPDATE, function(Event $event) {
+            $response = "Обновлен проект\n";
+            $this->listenerProject($event, $response);
+        });
     }
 }
