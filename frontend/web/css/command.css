@@ -1,0 +1,12 @@
+.command-item {
+    width: 300px;
+    margin-bottom: 20px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.preview_command {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}

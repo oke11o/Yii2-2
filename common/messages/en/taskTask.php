@@ -5,6 +5,9 @@ return [
     'dateLabel' => 'Deadline: ',
     'responsibleLabel' => 'Responsible: ',
     'statusLabel' => 'Status: ',
-    'projectLabel' => 'Project: '
+    'projectLabel' => 'Project: ',
+    'createUserLabel' => 'Created by User: ',
+    'createdAtLabel' => 'Date creating task: ',
+    'executionDateLabel' => 'Execution date: '
 ]
 ?>

@@ -19,10 +19,10 @@ class TaskCreateTelegram {
             if ($model->save()) {
                 $this->response = "Создание задачи прошло успешно";
             } else {
-                $this->response = "Ошибка при создании задачи!\nКоманда должна быть в формате:\n/task_create ##task_name## ##2019-01-10(deadline)## ##description## ##responsible_id## ##project_id## Имя задачи и дата выполнения - обязательные параметры!";
+                $this->response = "Ошибка при создании задачи!\nКоманда должна быть в формате:\n/task_create ##task_name## ##2019-01-10(deadline)## ##description## ##responsible_id## ##project_id## ##create_user_id## Имя задачи и дата выполнения - обязательные параметры!";
             }
         } catch (Exception $e) {
-            $this->response = "Ошибка при создании задачи!\nКоманда должна быть в формате:\n/task_create ##task_name## ##2019-01-10(deadline)## ##description## ##responsible_id## ##project_id## Имя задачи и дата выполнения - обязательные параметры!\nОшибка при сохранении: " . $e->getMessage();
+            $this->response = "Ошибка при создании задачи!\nКоманда должна быть в формате:\n/task_create ##task_name## ##2019-01-10(deadline)## ##description## ##responsible_id## ##project_id## ##create_user_id## Имя задачи и дата выполнения - обязательные параметры!\nОшибка при сохранении: " . $e->getMessage();
         }
     }
 }

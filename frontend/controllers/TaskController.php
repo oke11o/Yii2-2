@@ -126,8 +126,11 @@ class TaskController extends Controller {
         ]);
     }
 
-    public function actionCreate() {
-        $model = new Tasks();
+    public function actionCreate($idUser = null) {
+        $user_id = Yii::$app->user->identity->id;
+        $model = new Tasks([
+            'responsible_id' => $idUser
+        ]);
 
         $users = User::find()->all();
         $usersList = ArrayHelper::map($users, 'id', 'username');
@@ -146,7 +149,8 @@ class TaskController extends Controller {
             'model' => $model,
             'usersList' => $usersList,
             'statusList' => $statusList,
-            'projectList' => $projectList
+            'projectList' => $projectList,
+            'user_id' => $user_id
         ]);
     }
 
@@ -158,6 +162,12 @@ class TaskController extends Controller {
         return $this->renderAjax('_one', [
             'model' => $model
         ]);
+    }
+
+    public function actionDelete($id) {
+        $this->findModel($id)->delete();
+
+        return $this->redirect(Yii::$app->request->referrer);
     }
 
     protected function findModel($id)

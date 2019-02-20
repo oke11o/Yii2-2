@@ -46,6 +46,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Project Name',
                 'value' => 'project.name'
             ],
+            'create_user_id',
+            [
+                'label' => 'Creator username',
+                'value' => 'createUser.username'
+            ],
+            'execution_date',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

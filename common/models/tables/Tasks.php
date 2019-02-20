@@ -39,12 +39,18 @@ class Tasks extends ActiveRecord
             [['name', 'date'], 'required'],
             [['date', 'created_at', 'update_at'], 'safe'],
             [['description'], 'string'],
-            [['responsible_id', 'id_status', 'project_id'], 'integer'],
+            [['responsible_id', 'id_status', 'project_id', 'create_user_id'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::className(), 'targetAttribute' => ['project_id' => 'id']],
             [['responsible_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['responsible_id' => 'id']],
             [['id_status'], 'exist', 'skipOnError' => true, 'targetClass' => Status::className(), 'targetAttribute' => ['id_status' => 'id']],
-            [['responsible_id', 'project_id'], 'default', 'value' => 1]
+            [['responsible_id', 'project_id'], 'default', 'value' => 1],
+            ['execution_date', 'required', 'when' => function ($model) {
+                return $model->id_status == 3;
+            }, 'whenClient' => "function (attribute, value) {
+                return document.getElementById('tasks-id_status').value == 3;
+            }"],
+            //['execution_date', 'compare', 'compareAttribute' => 'created_at', 'operator' => '>=',],
         ];
     }
 
@@ -59,10 +65,12 @@ class Tasks extends ActiveRecord
             'date' => Yii::t('taskTask', 'dateLabel'),
             'description' => Yii::t('taskTask', 'descriptionLabel'),
             'responsible_id' => Yii::t('taskTask', 'responsibleLabel'),
-            'created_at' => 'Created time',
+            'created_at' => Yii::t('taskTask', 'createdAtLabel'),
             'update_at' => 'Updated time',
             'id_status' => Yii::t('taskTask', 'statusLabel'),
-            'project_id' => Yii::t('taskTask', 'projectLabel')
+            'project_id' => Yii::t('taskTask', 'projectLabel'),
+            'create_user_id' => Yii::t('taskTask', 'createUserLabel'),
+            'execution_date' => Yii::t('taskTask', 'executionDateLabel')
         ];
     }
 
@@ -76,6 +84,10 @@ class Tasks extends ActiveRecord
 
     public function getProject() {
         return $this->hasOne(Project::class, ['id' => 'project_id']);
+    }
+
+    public function getCreateUser() {
+        return $this->hasOne(User::class, ['id' => 'create_user_id']);
     }
 
     public function afterSave($insert, $changedAttributes) {
@@ -102,5 +114,9 @@ class Tasks extends ActiveRecord
                 'value' => new Expression('NOW()'),
             ],
         ];
+    }
+
+    public function extraFields() {
+        return ['user', 'status'];
     }
 }

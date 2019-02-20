@@ -34,19 +34,14 @@ class ProjectController extends Controller {
         $status = Status::find()->all();
         $statusList = ArrayHelper::map($status, 'id', 'name');
 
-        //$params = Yii::$app->request->queryParams;
-        //$params['project_id'] = $params['id'];
-        //unset($params['id']);
         $searchModel = new TasksSearch();
-        //echo 1;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $id);
 
         return $this->render('item', [
             'model' => $model,
             'statusList' => $statusList,
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'params' => $params
+            'dataProvider' => $dataProvider
         ]);
     }
 

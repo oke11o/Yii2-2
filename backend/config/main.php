@@ -57,6 +57,9 @@ return [
             'rules' => [
                 'tasks/view/<id:\d+>' => 'tasks/view',
                 'users/view/<id:\d+>' => 'users/view',
+                'project/view/<id:\d+>' => 'project/view',
+                'command/view/<id:\d+>' => 'command/view',
+                'command-user/view/<id:\d+>' => 'command-user/view',
             ],
         ],
         'lang' => [
@@ -64,4 +67,5 @@ return [
         ],
     ],
     'params' => $params,
+    'defaultRoute' => 'tasks/index'
 ];

@@ -6,9 +6,6 @@ use yii\widgets\ActiveForm;
 use yii\widgets\ListView;
 use yii\widgets\Pjax;
 use yii\grid\GridView;
-//use frontend\assets\OneTaskAsset;
-
-//OneTaskAsset::register($this);
 ?>
 
 <h2>При необходимости ниже можно изменить информацию о проекте:</h2>

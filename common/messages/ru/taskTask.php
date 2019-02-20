@@ -5,6 +5,9 @@ return [
     'dateLabel' => 'Срок исполнения: ',
     'responsibleLabel' => 'Ответственный: ',
     'statusLabel' => 'Статус: ',
-    'projectLabel' => 'Проект: '
+    'projectLabel' => 'Проект: ',
+    'createUserLabel' => 'Создана пользователем: ',
+    'createdAtLabel' => 'Задача создана: ',
+    'executionDateLabel' => 'Дата выполнения: '
 ]
 ?>

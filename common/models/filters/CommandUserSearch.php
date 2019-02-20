@@ -4,12 +4,12 @@ namespace common\models\filters;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\tables\Tasks;
+use common\models\tables\CommandUser;
 
 /**
- * TasksSearch represents the model behind the search form of `app\models\tables\Tasks`.
+ * CommandUserSearch represents the model behind the search form of `common\models\tables\CommandUser`.
  */
-class TasksSearch extends Tasks
+class CommandUserSearch extends CommandUser
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,7 @@ class TasksSearch extends Tasks
     public function rules()
     {
         return [
-            [['id', 'responsible_id', 'project_id', 'id_status', 'create_user_id'], 'integer'],
-            [['name', 'date', 'description', 'execution_date'], 'safe'],
+            [['id', 'id_user', 'id_command', 'id_role_command'], 'integer'],
         ];
     }
 
@@ -38,15 +37,15 @@ class TasksSearch extends Tasks
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $idProject = null)
+    public function search($params, $idCommand = null)
     {
-        if ($idProject) {
-            $query = Tasks::find()
-                ->where(['project_id' => $idProject]);
+        if ($idCommand) {
+            $query = CommandUser::find()
+                ->where(['id_command' => $idCommand]);
         } else {
-            $query = Tasks::find();
+            $query = CommandUser::find();
         }
-    
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -64,16 +63,10 @@ class TasksSearch extends Tasks
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'date' => $this->date,
-            'execution_date' => $this->execution_date,
-            'responsible_id' => $this->responsible_id,
-            'id_status' => $this->id_status,
-            'project_id' => $this->project_id,
-            'create_user_id' => $this->create_user_id,
+            'id_user' => $this->id_user,
+            'id_command' => $this->id_command,
+            'id_role_command' => $this->id_role_command,
         ]);
-
-        $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'description', $this->description]);
 
         return $dataProvider;
     }

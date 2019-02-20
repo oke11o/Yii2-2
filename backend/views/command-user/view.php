@@ -4,14 +4,14 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\tables\Tasks */
+/* @var $model common\models\tables\CommandUser */
 
-$this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Tasks', 'url' => ['index']];
+$this->title = $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Command Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
-<div class="tasks-view">
+<div class="command-user-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,29 +29,19 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'name',
-            'date',
-            'description:ntext',
+            'id', 
             [
-                'label' => 'Responsible UserName',
+                'label' => 'User name',
                 'value' => $model->user->username
             ],
             [
-                'label' => 'Status',
-                'value' => $model->status->name
-            ],
+                'label' => 'Command name',
+                'value' => $model->command->name
+            ], 
             [
-                'label' => 'Project Name',
-                'value' => $model->project->name
+                'label' => 'Role name',
+                'value' => $model->roleCommand->name
             ],
-            [
-                'label' => 'Creator Username',
-                'value' => $model->createUser->username
-            ],
-            'execution_date',
-            'created_at',
-            'update_at'
         ],
     ]) ?>
 

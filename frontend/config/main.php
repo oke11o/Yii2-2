@@ -20,12 +20,16 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
-            'cookieValidationKey' => $params['cookieValidationKey']
+            'cookieValidationKey' => $params['cookieValidationKey'],
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser'
+            ]
         ],
         'user' => [
             'identityClass' => 'common\models\tables\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-infosite', 'httpOnly' => true, 'domain' => $params['cookieDomain']],
+            //'enableSession' => false //- нужно включать для api.
         ],
         'session' => [
             // this is the name of the session cookie used for login on the frontend
@@ -54,6 +58,10 @@ return [
                 'task/item/<id:\d+>' => 'task/item',
                 'task/chatItem/<id:\d+>' => 'task/chatItem',
                 'project/item/<id:\d+>' => 'project/item',
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'tasks'
+                ]
             ],
         ],
         'lang' => [
@@ -61,5 +69,6 @@ return [
         ]
     ],
     'params' => $params,
-    'language' => 'ru'
+    'language' => 'ru',
+    'defaultRoute' => 'task/index'
 ];

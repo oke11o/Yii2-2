@@ -3,21 +3,20 @@
 namespace backend\controllers;
 
 use Yii;
-use common\models\tables\Tasks;
-use common\models\filters\TasksSearch;
+use common\models\tables\CommandUser;
+use common\models\tables\User;
+use common\models\tables\RoleCommand;
+use common\models\tables\Command;
+use common\models\filters\CommandUserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use common\models\tables\User;
-use common\models\tables\Status;
-use common\models\tables\Project;
-use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 
 /**
- * AdminTasksController implements the CRUD actions for Tasks model.
+ * CommandUserController implements the CRUD actions for CommandUser model.
  */
-class TasksController extends Controller
+class CommandUserController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -31,25 +30,16 @@ class TasksController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['admin'],
-                    ],
-                ],
-            ],
         ];
     }
 
     /**
-     * Lists all Tasks models.
+     * Lists all CommandUser models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new TasksSearch();
+        $searchModel = new CommandUserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -59,7 +49,7 @@ class TasksController extends Controller
     }
 
     /**
-     * Displays a single Tasks model.
+     * Displays a single CommandUser model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -72,39 +62,42 @@ class TasksController extends Controller
     }
 
     /**
-     * Creates a new Tasks model.
+     * Creates a new CommandUser model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $user_id = Yii::$app->user->identity->id;
-        $model = new Tasks();
+        $model = new CommandUser();
 
         $users = User::find()->all();
         $usersList = ArrayHelper::map($users, 'id', 'username');
 
-        $status = Status::find()->all();
-        $statusList = ArrayHelper::map($status, 'id', 'name');
+        $roleCommand = RoleCommand::find()->all();
+        $roleCommandList = ArrayHelper::map($roleCommand, 'id', 'name');
 
-        $project = Project::find()->all();
-        $projectList = ArrayHelper::map($project, 'id', 'name');
+        $command = Command::find()->all();
+        $commandList = ArrayHelper::map($command, 'id', 'name');
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && ($error = $model->save()) === true) {
             return $this->redirect(['view', 'id' => $model->id]);
+        } else if ($error) {
+            return $this->render('error', [
+                'error' => $error,
+                'id' => $model->id
+            ]);
         }
 
         return $this->render('create', [
             'model' => $model,
             'usersList' => $usersList,
-            'statusList' => $statusList,
-            'projectList' => $projectList,
-            'user_id' => $user_id
+            'roleCommandList' => $roleCommandList,
+            'commandList' => $commandList
         ]);
     }
 
     /**
-     * Updates an existing Tasks model.
+     * Updates an existing CommandUser model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -113,29 +106,30 @@ class TasksController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+
         $users = User::find()->all();
         $usersList = ArrayHelper::map($users, 'id', 'username');
+
+        $roleCommand = RoleCommand::find()->all();
+        $roleCommandList = ArrayHelper::map($roleCommand, 'id', 'name');
+
+        $command = Command::find()->all();
+        $commandList = ArrayHelper::map($command, 'id', 'name');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        $status = Status::find()->all();
-        $statusList = ArrayHelper::map($status, 'id', 'name');
-
-        $project = Project::find()->all();
-        $projectList = ArrayHelper::map($project, 'id', 'name');
-
         return $this->render('update', [
             'model' => $model,
             'usersList' => $usersList,
-            'statusList' => $statusList,
-            'projectList' => $projectList
+            'roleCommandList' => $roleCommandList,
+            'commandList' => $commandList
         ]);
     }
 
     /**
-     * Deletes an existing Tasks model.
+     * Deletes an existing CommandUser model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -149,15 +143,15 @@ class TasksController extends Controller
     }
 
     /**
-     * Finds the Tasks model based on its primary key value.
+     * Finds the CommandUser model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Tasks the loaded model
+     * @return CommandUser the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Tasks::findOne($id)) !== null) {
+        if (($model = CommandUser::findOne($id)) !== null) {
             return $model;
         }
 
