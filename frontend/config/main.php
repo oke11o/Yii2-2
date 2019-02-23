@@ -70,5 +70,10 @@ return [
     ],
     'params' => $params,
     'language' => 'ru',
-    'defaultRoute' => 'task/index'
+    'defaultRoute' => 'task/index',
+    'modules' => [
+        'v1' => [
+            'class' => 'frontend\modules\v1\Module',
+        ],
+    ],
 ];
