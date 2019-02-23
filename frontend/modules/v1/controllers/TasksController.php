@@ -8,15 +8,10 @@ use common\models\tables\User;
 use yii\data\ActiveDataProvider;
 use yii\filters\auth\HttpBasicAuth;
 use yii\filters\auth\HttpBearerAuth;
+use frontend\modules\v1\models\TaskFilter;
 
 class TasksController extends ActiveController {
     public $modelClass = Tasks::class;
-
-    private $filterSearch = [
-        'responsible_id',
-        'create_user_id',
-        'month'
-    ];
 
     public function actions() {
         $actions = parent::actions();
@@ -50,20 +45,7 @@ class TasksController extends ActiveController {
         $query = Tasks::find();
 
         if($filter) {
-            $filterName = array_keys($filter);
-
-            foreach($filterName as $oneFilter) {
-                if (!in_array($oneFilter, $this->filterSearch)) {
-                    unset($filter[$oneFilter]);
-                } else if ($oneFilter == 'month') {
-                    if ($filter[$oneFilter]>=1 && $filter[$oneFilter]<=12) {
-                        $query->andFilterWhere(['MONTH(date)' => $filter[$oneFilter]]);
-                    }
-
-                    unset($filter[$oneFilter]);
-                }
-            }
-            $query->andFilterWhere($filter);
+            $query = (new TaskFilter($query))->addFilter($filter);
         }
 
         return new ActiveDataProvider([
