@@ -30,4 +30,8 @@ ProjectAsset::register($this);
     <?= Html::beginForm(Url::to(['project/create'])) ?>
         <?= Html::submitButton('Создать новый проект', ['class' => 'btn btn-warning create_task_button']) ?>
     <?= Html::endForm() ?>
+
+    <?= Html::beginForm(Url::to(['project/statictic'])) ?>
+        <?= Html::submitButton('Просмотреть отчетность по проектам', ['class' => 'btn btn-success statistic_task_button']) ?>
+    <?= Html::endForm() ?>
 </div>

@@ -47,6 +47,12 @@ use yii\grid\GridView;
             'label' => 'Responsible User Name',
             'value' => 'user.username'
         ],
+        'id_status',
+        [
+            'label' => 'Status',
+            'value' => 'status.name'
+        ],
+        'execution_date',
         [
             'class' => 'yii\grid\ActionColumn',
             'template' => '{view}',

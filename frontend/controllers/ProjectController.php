@@ -10,6 +10,7 @@ use common\models\tables\Status;
 use common\models\tables\Tasks;
 use yii\helpers\ArrayHelper;
 use common\models\filters\TasksSearch;
+use yii\db\Expression;
 
 class ProjectController extends Controller {
     public function actionIndex() {
@@ -78,5 +79,49 @@ class ProjectController extends Controller {
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionStatictic() {
+        $project = Project::find()->all();
+        $projectList = ArrayHelper::map($project, 'id', 'name');
+
+        if (!$id = Yii::$app->request->post('id')) {
+            $id = $project[0]['id'];
+        }
+
+        $tasksProject = Tasks::find()
+            ->where(['project_id' => $id]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $tasksProject
+        ]);
+
+        $tasksOverdue = Tasks::find()
+            ->where(['and', ['project_id' => $id], 
+                ['or', 
+                    ['and', ['!=', 'id_status', 3], new Expression('`date` < NOW()')],
+                    ['and', ['id_status' => 3], new Expression('`date` < `execution_date`')]
+                ]
+            ]
+        );
+        $dataProviderOverdue = new ActiveDataProvider([
+            'query' => $tasksOverdue
+        ]);
+
+        $tasksClosed = Tasks::find()
+            ->where(['and', ['project_id' => $id], 
+                ['and', ['id_status' => 3], new Expression('execution_date >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)')]
+            ]
+        );
+        $dataProviderClosed = new ActiveDataProvider([
+            'query' => $tasksClosed
+        ]);
+
+        return $this->render('statictic', [
+            'projectList' => $projectList,
+            'id' => $id,
+            'dataProvider' => $dataProvider,
+            'dataProviderOverdue' => $dataProviderOverdue,
+            'dataProviderClosed' => $dataProviderClosed
+        ]);
     }
 }
